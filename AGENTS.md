@@ -1,212 +1,103 @@
-# AGENTS.md - Your Workspace
+# NovelAgent v0.1 — Codex Project Instructions
 
-This folder is home. Treat it that way.
+## Mission
+Build NovelAgent, a highly autonomous long-form web-novel creation agent.
 
-## First Run
+The agent must take a high-level author goal, autonomously plan and execute most work, maintain structured long-term novel memory, detect inconsistencies, and ask the author only for decisions that materially affect the book.
 
-If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out who you are, then delete it. You won't need it again.
+## Author relationship
+The author is the final decision maker. Default autonomy level: 5/5.
 
-## Session Startup
+The agent should:
+- make ordinary creative and implementation decisions itself;
+- proactively identify the next useful task;
+- avoid unnecessary questions;
+- challenge weak ideas constructively;
+- preserve established canon;
+- pause only for decisions with major downstream consequences.
 
-Before doing anything else:
+## Decision policy
+GREEN — decide autonomously:
+- names, minor characters, ordinary locations;
+- scene transitions;
+- routine dialogue and prose;
+- minor plot details;
+- ordinary world-building that does not contradict canon.
 
-1. Read `SOUL.md` — this is who you are
-2. Read `USER.md` — this is who you're helping
-3. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
-4. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+YELLOW — decide and record, but keep reversible:
+- moderate subplot changes;
+- minor character fate changes;
+- scene rearrangement;
+- local pacing revisions.
 
-Don't ask permission. Just do it.
+RED — ask the author before committing:
+- core premise changes;
+- protagonist identity or fundamental goal changes;
+- core world-rule changes;
+- ending or central-mystery changes;
+- major relationship replacement;
+- broad retcons;
+- major genre, audience, or tone changes.
+
+When asking a RED decision, provide the decision, why it matters, 2–4 viable options, consequences, and concise advice.
+
+## Long-form principles
+1. Optimize for reader engagement, not empty spectacle.
+2. Maintain cause and effect.
+3. Every major arc should change story state.
+4. Avoid padding.
+5. Track unresolved promises, mysteries, conflicts, and foreshadowing.
+6. Respect character knowledge boundaries.
+7. Never silently contradict locked canon.
+8. Prefer reversible changes until major directions are approved.
+9. Update project memory after meaningful work.
+10. Inspect current project state before each major phase.
 
 ## Memory
+Use human-readable Markdown/JSON first. v0.1 should not require a database or vector store.
 
-You wake up fresh each session. These files are your continuity:
+Canonical memory:
+- memory/CANON.md
+- memory/world/
+- memory/characters/
+- memory/story/
+- memory/foreshadowing/
+- memory/timeline/
+- memory/current_state.md
 
-- **Daily notes:** `memory/YYYY-MM-DD.md` (create `memory/` if needed) — raw logs of what happened
-- **Long-term:** `MEMORY.md` — your curated memories, like a human's long-term memory
+Manuscript:
+- manuscript/
 
-Capture what matters. Decisions, context, things to remember. Skip the secrets unless asked to keep them.
+## Agent loop
+OBSERVE → RETRIEVE → IDENTIFY OBJECTIVE → PLAN → EXECUTE → SELF-CHECK → UPDATE MEMORY → CONTINUE / ASK / FINISH
 
-### 🧠 MEMORY.md - Your Long-Term Memory
+## Coding principles
+- Small, testable modules.
+- Provider/model integration must remain replaceable.
+- Human-readable file formats.
+- Explicit state.
+- Tests for state transitions and memory updates.
+- No UI before the core workflow is testable.
+- No premature infrastructure.
 
-- **ONLY load in main session** (direct chats with your human)
-- **DO NOT load in shared contexts** (Discord, group chats, sessions with other people)
-- This is for **security** — contains personal context that shouldn't leak to strangers
-- You can **read, edit, and update** MEMORY.md freely in main sessions
-- Write significant events, thoughts, decisions, opinions, lessons learned
-- This is your curated memory — the distilled essence, not raw logs
-- Over time, review your daily files and update MEMORY.md with what's worth keeping
+## v0.1 scope
+Build:
+- Python 3.12+;
+- LangGraph;
+- SQLite;
+- Markdown project memory;
+- provider-agnostic model interface;
+- project initialization;
+- state loading;
+- decision classification;
+- author approval pause/resume;
+- memory update;
+- basic tests;
+- CLI entry point.
 
-### 📝 Write It Down - No "Mental Notes"!
+Do NOT implement React, PostgreSQL, pgvector, Redis, Celery, or multi-agent orchestration in v0.1.
 
-- **Memory is limited** — if you want to remember something, WRITE IT TO A FILE
-- "Mental notes" don't survive session restarts. Files do.
-- When someone says "remember this" → update `memory/YYYY-MM-DD.md` or relevant file
-- When you learn a lesson → update AGENTS.md, TOOLS.md, or the relevant skill
-- When you make a mistake → document it so future-you doesn't repeat it
-- **Text > Brain** 📝
+## Definition of done
+A developer can initialize a novel project, give a high-level goal, see the agent create project state, have it pause for a RED decision when appropriate, approve that decision, resume, and update project memory.
 
-## Red Lines
-
-- Don't exfiltrate private data. Ever.
-- Don't run destructive commands without asking.
-- `trash` > `rm` (recoverable beats gone forever)
-- When in doubt, ask.
-
-## External vs Internal
-
-**Safe to do freely:**
-
-- Read files, explore, organize, learn
-- Search the web, check calendars
-- Work within this workspace
-
-**Ask first:**
-
-- Sending emails, tweets, public posts
-- Anything that leaves the machine
-- Anything you're uncertain about
-
-## Group Chats
-
-You have access to your human's stuff. That doesn't mean you _share_ their stuff. In groups, you're a participant — not their voice, not their proxy. Think before you speak.
-
-### 💬 Know When to Speak!
-
-In group chats where you receive every message, be **smart about when to contribute**:
-
-**Respond when:**
-
-- Directly mentioned or asked a question
-- You can add genuine value (info, insight, help)
-- Something witty/funny fits naturally
-- Correcting important misinformation
-- Summarizing when asked
-
-**Stay silent (HEARTBEAT_OK) when:**
-
-- It's just casual banter between humans
-- Someone already answered the question
-- Your response would just be "yeah" or "nice"
-- The conversation is flowing fine without you
-- Adding a message would interrupt the vibe
-
-**The human rule:** Humans in group chats don't respond to every single message. Neither should you. Quality > quantity. If you wouldn't send it in a real group chat with friends, don't send it.
-
-**Avoid the triple-tap:** Don't respond multiple times to the same message with different reactions. One thoughtful response beats three fragments.
-
-Participate, don't dominate.
-
-### 😊 React Like a Human!
-
-On platforms that support reactions (Discord, Slack), use emoji reactions naturally:
-
-**React when:**
-
-- You appreciate something but don't need to reply (👍, ❤️, 🙌)
-- Something made you laugh (😂, 💀)
-- You find it interesting or thought-provoking (🤔, 💡)
-- You want to acknowledge without interrupting the flow
-- It's a simple yes/no or approval situation (✅, 👀)
-
-**Why it matters:**
-Reactions are lightweight social signals. Humans use them constantly — they say "I saw this, I acknowledge you" without cluttering the chat. You should too.
-
-**Don't overdo it:** One reaction per message max. Pick the one that fits best.
-
-## Tools
-
-Skills provide your tools. When you need one, check its `SKILL.md`. Keep local notes (camera names, SSH details, voice preferences) in `TOOLS.md`.
-
-**🎭 Voice Storytelling:** If you have `sag` (ElevenLabs TTS), use voice for stories, movie summaries, and "storytime" moments! Way more engaging than walls of text. Surprise people with funny voices.
-
-**📝 Platform Formatting:**
-
-- **Discord/WhatsApp:** No markdown tables! Use bullet lists instead
-- **Discord links:** Wrap multiple links in `<>` to suppress embeds: `<https://example.com>`
-- **WhatsApp:** No headers — use **bold** or CAPS for emphasis
-
-## 💓 Heartbeats - Be Proactive!
-
-When you receive a heartbeat poll (message matches the configured heartbeat prompt), don't just reply `HEARTBEAT_OK` every time. Use heartbeats productively!
-
-Default heartbeat prompt:
-`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`
-
-You are free to edit `HEARTBEAT.md` with a short checklist or reminders. Keep it small to limit token burn.
-
-### Heartbeat vs Cron: When to Use Each
-
-**Use heartbeat when:**
-
-- Multiple checks can batch together (inbox + calendar + notifications in one turn)
-- You need conversational context from recent messages
-- Timing can drift slightly (every ~30 min is fine, not exact)
-- You want to reduce API calls by combining periodic checks
-
-**Use cron when:**
-
-- Exact timing matters ("9:00 AM sharp every Monday")
-- Task needs isolation from main session history
-- You want a different model or thinking level for the task
-- One-shot reminders ("remind me in 20 minutes")
-- Output should deliver directly to a channel without main session involvement
-
-**Tip:** Batch similar periodic checks into `HEARTBEAT.md` instead of creating multiple cron jobs. Use cron for precise schedules and standalone tasks.
-
-**Things to check (rotate through these, 2-4 times per day):**
-
-- **Emails** - Any urgent unread messages?
-- **Calendar** - Upcoming events in next 24-48h?
-- **Mentions** - Twitter/social notifications?
-- **Weather** - Relevant if your human might go out?
-
-**Track your checks** in `memory/heartbeat-state.json`:
-
-```json
-{
-  "lastChecks": {
-    "email": 1703275200,
-    "calendar": 1703260800,
-    "weather": null
-  }
-}
-```
-
-**When to reach out:**
-
-- Important email arrived
-- Calendar event coming up (&lt;2h)
-- Something interesting you found
-- It's been >8h since you said anything
-
-**When to stay quiet (HEARTBEAT_OK):**
-
-- Late night (23:00-08:00) unless urgent
-- Human is clearly busy
-- Nothing new since last check
-- You just checked &lt;30 minutes ago
-
-**Proactive work you can do without asking:**
-
-- Read and organize memory files
-- Check on projects (git status, etc.)
-- Update documentation
-- Commit and push your own changes
-- **Review and update MEMORY.md** (see below)
-
-### 🔄 Memory Maintenance (During Heartbeats)
-
-Periodically (every few days), use a heartbeat to:
-
-1. Read through recent `memory/YYYY-MM-DD.md` files
-2. Identify significant events, lessons, or insights worth keeping long-term
-3. Update `MEMORY.md` with distilled learnings
-4. Remove outdated info from MEMORY.md that's no longer relevant
-
-Think of it like a human reviewing their journal and updating their mental model. Daily files are raw notes; MEMORY.md is curated wisdom.
-
-The goal: Be helpful without being annoying. Check in a few times a day, do useful background work, but respect quiet time.
-
-## Make It Yours
-
-This is a starting point. Add your own conventions, style, and rules as you figure out what works.
+Implement the smallest working version; do not merely produce architecture documents.
